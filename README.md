@@ -24,17 +24,66 @@ Go to the project directory
   cd spikeapp
 ```
 
-Install dependencies
+## Backend setup
+1. ### Navigate to the Backend Directory
 
-```bash
-  npm install
-```
+`` cd spikeapp/backend ``
 
-Start the server
+2. ### Create a Virtual Environment
+Run the following command to create a virtual environment. This keeps all your Python dependencies isolated.
 
-```bash
-  npm run dev
-```
+```` python -m venv venv ````
+
+3. ### Activate the Virtual Environment
+For Windows (Command Prompt or PowerShell)
+
+``venv\Scripts\activate``
+
+For macOS/Linux (or Git Bash on Windows):
+
+``source venv/bin/activate``
+
+4. ### Install Backend Dependencies
+Once the virtual environment is activated, install the required dependencies for the backend.
+
+Make sure you have a requirements.txt file in the backend/ folder with the following content:
+````
+Flask==2.2.2
+flask-cors==3.0.10
+flask-cors==3.0.10
+  ````
+
+Now, install the dependencies:
+
+``
+pip install -r requirements.txt
+``
+
+5. ### Run the Flask Backend
+Once the dependencies are installed, you can run the backend Flask server:
+````
+cd backend 
+python gensvg.py 
+````
+
+## Frontend setup
+1. ### Open a New Terminal Window
+2. ### Navigate to the Frontend Directory
+
+````
+cd spikeapp/frontend
+````
+3. ### Install Frontend dependencies
+````
+ npm install 
+ ````
+
+4. ### Start the Frontend Server
+````
+npm run dev
+````
+This will start the frontend at ````http://localhost:5173 ````
+
 
 ## 🧰 Tech Stack
 
@@ -78,35 +127,3 @@ spikeapp/
 
 ```
 
-## Backend setup
-1. Navigate to the Backend Directory
-In your terminal, navigate to the backend/ folder:
-
-`` cd spikeapp/backend ``
-
-2. Create a Virtual Environment
-Run the following command to create a virtual environment. This keeps all your Python dependencies isolated.
-`` python -m venv venv ``
-
-3. Activate the Virtual Environment
-For Windows (Command Prompt or PowerShell)
-``venv\Scripts\activate``
-
-For macOS/Linux (or Git Bash on Windows):
-``source venv/bin/activate``
-
-4. Install Backend Dependencies
-Once the virtual environment is activated, install the required dependencies for the backend.
-
-Make sure you have a requirements.txt file in the backend/ folder with the following content:
-``
-Flask==2.2.2
-flask-cors==3.0.10
-flask-cors==3.0.10
-  ``
-Now, install the dependencies:
-``pip install -r requirements.txt``
-
-5. Run the Flask Backend
-Once the dependencies are installed, you can run the backend Flask server:
-``python gensvg.py``
