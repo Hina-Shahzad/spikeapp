@@ -53,20 +53,28 @@ Start the server
 ## Folder Structure
 ```
 spikeapp/
-├── public/
-│   └── annotated_drillbit.svg      # The SVG file with draggable elements
-├── src/
-│   ├── App.tsx                     # Main layout component
-│   ├── main.tsx                    # React entry point
-│   └── InteractiveSVG.tsx          # SVG rendering and D3 interaction logic
-├── backend/
-│   ├── app.py                      # Backend logic for serving the SVG
-│   └── requirements.txt            # Backend dependencies
-├── .eslintrc.cjs                   # ESLint configuration
-├── index.html                      # HTML template
-├── package.json                    # Project metadata and scripts
-├── tsconfig.json                   # TypeScript config
-└── vite.config.ts                  # Vite configuration
+├── backend/                           # Backend logic (e.g., Flask, FastAPI)
+│   ├── gensvg.py                      # Main backend logic for handling requests (e.g., serving SVG, position updates)
+│   └── requirements.txt               # Python dependencies for the backend
+├── frontend/                          # Frontend React app
+│   ├── public/                        # Public folder for static assets (like images, SVGs)
+│   │   └── annotated_drillbit.svg     # The SVG file with draggable elements
+│   ├── src/                           # All frontend source code
+│   │   ├── App.tsx                    # Main layout component
+│   │   ├── main.tsx                   # React entry point
+│   │   ├── InteractiveSVG.tsx         # SVG rendering and D3 interaction logic
+│   │   ├── services/                  # Service-related files (e.g., API calls, etc.)
+│   │   │   ├── apiService.ts          # API service logic (e.g., fetching SVG, updating position)
+│   │   ├── types/                     # TypeScript types for frontend
+│   │   │   ├── api.ts                 # TypeScript types for API responses/requests (e.g., Position)
+│   ├── .gitignore                     # Git ignore file for frontend
+│   ├── index.html                     # HTML template for frontend
+│   ├── package.json                   # Frontend project metadata and scripts
+│   ├── tsconfig.json                  # TypeScript configuration for frontend
+│   └── vite.config.ts                 # Vite configuration for frontend
+├── .gitignore                         # Root-level Git ignore file (to ignore node_modules, logs, etc.)
+├── README.md                          # Project readme for documentation
+
 
 ```
 
@@ -93,11 +101,12 @@ Once the virtual environment is activated, install the required dependencies for
 Make sure you have a requirements.txt file in the backend/ folder with the following content:
 ``
 Flask==2.2.2
-  flask-cors==3.0.10
+flask-cors==3.0.10
+flask-cors==3.0.10
   ``
 Now, install the dependencies:
 ``pip install -r requirements.txt``
 
 5. Run the Flask Backend
 Once the dependencies are installed, you can run the backend Flask server:
-``python app.py``
+``python gensvg.py``

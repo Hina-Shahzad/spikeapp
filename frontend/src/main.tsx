@@ -1,9 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import InteractiveSVG from './InteractiveSVG.tsx'
+import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <InteractiveSVG />
+    <App />
   </StrictMode>,
 )

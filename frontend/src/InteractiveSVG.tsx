@@ -33,19 +33,21 @@ const InteractiveSVG = () => {
                 })
                 .on("drag", function (event) {
                     const el = d3.select(this);
+                    const bigCircle = svg.select("circle");
+                    const radius = parseFloat(bigCircle.attr("r"));
+                    const cx = parseFloat(bigCircle.attr("cx")); 
+                    const cy = parseFloat(bigCircle.attr("cy"));
+                    // Calculate the distance of the small circle (with id="handleid") from the center
+                    const dx = event.x - cx;
+                    const dy = event.y - cy;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
 
-                    if (el.node()?.tagName === "circle" || el.node()?.tagName === "ellipse") {
-                        el.attr("cx", event.x).attr("cy", event.y);
-                    } 
-                    /*else if (el.node()?.tagName === "path") {
-                        const transform = el.attr("transform") || "matrix(1, 0, 0, 1, 0, 0)";
-                        const match = /matrix\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+)\)/.exec(transform);
-                        if (match) {
-                            const [a, b, c, d, e, f] = match.slice(1).map(parseFloat);
-                            const newMatrix = `matrix(${a}, ${b}, ${c}, ${d}, ${e + event.dx}, ${f + event.dy})`;
-                            el.attr("transform", newMatrix);
+                    // If the small circle is within the large circle boundary, move it
+                    if (distance + 5 <= radius) { // 5 is the radius of the small circle
+                        if (el.node()?.tagName === "circle") {
+                            el.attr("cx", event.x).attr("cy", event.y);
                         }
-                    }*/
+                    }
                 })
                 .on("end", function () {
                     const el = d3.select(this);
@@ -56,16 +58,7 @@ const InteractiveSVG = () => {
                             x: parseFloat(el.attr("cx") || "0"),
                             y: parseFloat(el.attr("cy") || "0"),
                         };
-                    } 
-                    /*else if (el.node()?.tagName === "path") {
-                        const transform = el.attr("transform");
-                        const match = /matrix\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+)\)/.exec(transform || "");
-                        if (match) {
-                            position = {
-                                matrix: match.slice(1),
-                            };
-                        }
-                    }*/
+                    }
 
                     // Only call API if position is valid
                     if (position) {
