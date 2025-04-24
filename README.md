@@ -10,9 +10,6 @@ This project demonstrates how to load and interact with an SVG file using **Reac
 - **SVG Interaction**: [D3.js](https://d3js.org/) handles dragging behavior
 - **Goal**: Make specific SVG elements (e.g., `path`, `ellipse`) draggable and log their new positions for potential backend API calls.
 
-
-
-
 ## Run Locally
 
 Clone the project

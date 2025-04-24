@@ -1,14 +1,23 @@
 import { useState, useEffect } from "react";
-import * as d3 from 'd3';
+import * as d3 from "d3";
+import { fetchSceneSVG, updatePosition } from "./services/apiService";
+import { Position } from "./types/api";
 
 const InteractiveSVG = () => {
-    const [svgContent, setSvgContent] = useState<string>('');
+    const [svgContent, setSvgContent] = useState<string>("");
 
     useEffect(() => {
-        fetch('/public/annotated_drillbit.svg')
-            .then((res) => res.text())
-            .then((data) => setSvgContent(data))
-    }, [])
+        const loadSVG = async () => {
+            try {
+                const svgText = await fetchSceneSVG(100);
+                setSvgContent(svgText);
+            } catch (err) {
+                console.error("Error loading SVG:", err);
+            }
+        };
+
+        loadSVG();
+    }, []);
 
     useEffect(() => {
         if (!svgContent) return;
@@ -25,74 +34,62 @@ const InteractiveSVG = () => {
                 .on("drag", function (event) {
                     const el = d3.select(this);
 
-                    // Handle circle/ellipse (move with cx, cy)
                     if (el.node()?.tagName === "circle" || el.node()?.tagName === "ellipse") {
-                        const newX = event.x;
-                        const newY = event.y;
-                        el.attr("cx", newX).attr("cy", newY);
-                        console.log("Dragging (circle/ellipse):", { x: newX, y: newY });
-                    }
-
-                    // Handle path (move with matrix)
-                    else if (el.node()?.tagName === "path") {
+                        el.attr("cx", event.x).attr("cy", event.y);
+                    } 
+                    /*else if (el.node()?.tagName === "path") {
                         const transform = el.attr("transform") || "matrix(1, 0, 0, 1, 0, 0)";
-                        console.log("transform", transform);
-
-                        // Extract the current matrix values
                         const match = /matrix\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+)\)/.exec(transform);
-                        console.log("Match", match);
-
                         if (match) {
-                            const a = parseFloat(match[1]);     // Horizontal scaling
-                            const b = parseFloat(match[2]);     // vertical skewing
-                            const c = parseFloat(match[3]);     // Horizontal skewing
-                            const d = parseFloat(match[4]);     // Vertical scaling
-                            const e = parseFloat(match[5]);     // Horizontal translation (x-axis)
-                            const f = parseFloat(match[6]);     // Vertical translation (y-axis)
-
-                            // Calculate new matrix based on drag movement (event.dx, event.dy)
+                            const [a, b, c, d, e, f] = match.slice(1).map(parseFloat);
                             const newMatrix = `matrix(${a}, ${b}, ${c}, ${d}, ${e + event.dx}, ${f + event.dy})`;
-
                             el.attr("transform", newMatrix);
-                            console.log("Dragging (path):", newMatrix);
                         }
-                    }
+                    }*/
                 })
                 .on("end", function () {
                     const el = d3.select(this);
-                    let newPosition;
+                    let position: Position | undefined;
 
                     if (el.node()?.tagName === "circle" || el.node()?.tagName === "ellipse") {
-                        newPosition = {
-                            x: el.attr("cx"),
-                            y: el.attr("cy"),
+                        position = {
+                            x: parseFloat(el.attr("cx") || "0"),
+                            y: parseFloat(el.attr("cy") || "0"),
                         };
-                    } else if (el.node()?.tagName === "path") {
+                    } 
+                    /*else if (el.node()?.tagName === "path") {
                         const transform = el.attr("transform");
                         const match = /matrix\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+)\)/.exec(transform || "");
-                        newPosition = {
-                            matrix: match ? match.slice(1) : [],
-                        };
-                    }
+                        if (match) {
+                            position = {
+                                matrix: match.slice(1),
+                            };
+                        }
+                    }*/
 
-                    console.log("Final position:", newPosition);
+                    // Only call API if position is valid
+                    if (position) {
+                        updatePosition(position)
+                            .then((res) => console.log("Backend update success:", res, "new position is", position))
+                            .catch((err) => console.error("Update error:", err));
+                    } else {
+                        console.warn("Position not available for update.");
+                    }
                 });
 
-            // Apply dragHandler to both circle/ellipse and path (star)
-            svg.selectAll<SVGGraphicsElement, unknown>("#scatterer, #source").call(dragHandler);
-
+            svg.selectAll<SVGGraphicsElement, unknown>("#handleid").call(dragHandler);
         }, 100);
 
         return () => clearTimeout(timeout);
-
     }, [svgContent]);
 
     return (
         <div
-            dangerouslySetInnerHTML={{ __html: svgContent }}
             id="svg-container"
+            style={{ width: '100%', height: '512px' }}
+            dangerouslySetInnerHTML={{ __html: svgContent }}
         />
     );
-}
+};
 
 export default InteractiveSVG;
