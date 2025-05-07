@@ -63,7 +63,7 @@ pip install -r requirements.txt
 Once the dependencies are installed, you can run the backend Flask server:
 ````
 cd backend 
-python gensvg.py 
+python app.py 
 ````
 
 ## Frontend setup
