@@ -103,7 +103,8 @@ This will start the frontend at ````http://localhost:5173 ````
 ```
 spikeapp/
 ├── backend/                           # Backend logic (e.g., Flask, FastAPI)
-│   ├── gensvg.py                      # Main backend logic for handling requests (e.g., serving SVG, position updates)
+│   ├── app.py                         # Flask entry point for serving SVG and handling position updates
+│   ├── gensvg.py                      # Core logic for SVG generation and coordinate management
 │   └── requirements.txt               # Python dependencies for the backend
 ├── frontend/                          # Frontend React app
 │   ├── public/                        # Public folder for static assets (like images, SVGs)
