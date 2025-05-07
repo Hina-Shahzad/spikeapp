@@ -12,8 +12,14 @@ positions = {
     'blue-group': {'x': 350, 'y': 255},
     'green-group': {'x': 600, 'y': 255},
     'yellow-group': {'x': 800, 'y': 255}, 
-    'path-group': {'x': 400, 'y': 100}, 
-    'line-group': {'x': 400, 'y': 100}
+    'path-group': {
+        'start': {'x': 400, 'y': 100},
+        'end': {'x': 600, 'y': 100}
+    },
+    'line-group': {
+        'start': {'x': 400, 'y': 160},
+        'end': {'x': 600, 'y': 160}
+    }
 }
 
 
@@ -34,14 +40,18 @@ def circle_scene():
 def update_position():
     data = request.get_json()
     target = data.get('target')
+    role = data.get('role')
 
-    print(f'target {target}')
+    print(f'target {target} role {role}')
 
     if target not in positions:
         return jsonify({"status": "error", "message": "Invalid target"}), 400
 
     positions[target]['x'] = int(data.get('x'))
     positions[target]['y'] = int(data.get('y'))
+    if role is not None:
+        positions[target][role]['x'] = int(data.get('x'))
+        positions[target][role]['y'] = int(data.get('y'))
 
     print(f"Updated {target} position to x={positions[target]['x']}, y={positions[target]['y']}")
 

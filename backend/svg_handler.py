@@ -5,8 +5,13 @@ def generate_svg(positions, radius):
     blue = positions['blue-group']
     green = positions['green-group']
     yellow = positions['yellow-group']
-    path = positions['path-group']
-    line = positions['line-group']
+    path_start = positions['path-group']['start']
+    path_end = positions['path-group']['end']
+    line_start = positions['line-group']['start']
+    line_end = positions['line-group']['end']
+
+    #path = positions['path-group']
+    #line = positions['line-group']
 
 
     svg = f"""
@@ -32,19 +37,53 @@ def generate_svg(positions, radius):
         <ellipse rx="60" ry="30" cx="{yellow['x']}" cy="{yellow['y']}" fill="gold" class="yellow-group"/>
         <circle r="8" cx="{yellow['x']}" cy="{yellow['y']}" fill="black" class="yellow-group yellow-draggable"/>
 
-        <!-- Path Example -->
-        <path d="M{path['x']},{path['y']} C{path['x']+50},{path['y']+50}, {path['x']+150},{path['y']+50}, {path['x']+200},{path['y']}" fill="transparent" stroke="black" class="path-group" />
-        <circle r="5" cx="{path['x']+200}" cy="{path['y']}" fill="black" class="path-group path-draggable" />
+        <!-- Curved Path -->
+        <path
+        d="M{path_start['x']},{path_start['y']} C{path_start['x']+50},{path_start['y']+50}, {path_end['x']-50},{path_end['y']+50}, {path_end['x']},{path_end['y']}"
+        fill="transparent"
+        stroke="black"
+        class="path-group"
+        />
+        <circle 
+            r="5" 
+            cx="{path_start['x']}" 
+            cy="{path_start['y']}" 
+            fill="red" 
+            class="path-group path-start-draggable" 
+        />
+        <circle 
+            r="5" 
+            cx="{path_end['x']}" 
+            cy="{path_end['y']}" 
+            fill="red" 
+            class="path-group path-end-draggable" 
+        />
+        
         
 
-        <path d="M{line['x']},{line['y']+60} L{line['x']+200},{line['y']+60}" fill="transparent" stroke="blue" class="line-group" />
+        <path 
+        d="M{line_start['x']},{line_start['y']} L{line_end['x']},{line_end['y']}" 
+        fill="transparent" 
+        stroke="blue" 
+        class="line-group" 
+        />
 
-        <!-- Start and End Handle for Straight Line -->
-        <circle r="5" cx="{line['x']}" cy="{line['y']+60}" fill="blue" class="line-group line-start-draggable" />
-        <circle r="5" cx="{line['x']+200}" cy="{line['y']+60}" fill="blue" class="line-group line-end-draggable" />
+        <!-- Start and End Handles for Straight Line -->
+        <circle 
+            r="5" 
+            cx="{line_start['x']}" 
+            cy="{line_start['y']}" 
+            fill="red" 
+            class="line-group line-start-draggable" 
+        />
 
-            
-    </svg>
+        <circle 
+            r="5" 
+            cx="{line_end['x']}" 
+            cy="{line_end['y']}" 
+            fill="green" 
+            class="line-group line-end-draggable" 
+        />
     </svg>
     """
     return svg.strip()
